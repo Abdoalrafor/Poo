@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>صفحة AI</title>
+  <meta name="viewport" contact="width=device-width,inital-scale=1,0"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .container {
+      width: 65%;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    
+    }
+    .chat-box {
+      height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 20px;
+      background-color: #f9f9f9;
+    
+    }
+    .chat-box .message {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+      max-width: 80%;
+      
+    }
+    .chat-box .message.user {
+      background-color: #d1e7dd;
+      align-self: flex-end;
+      
+    }
+    .chat-box .message.ai {
+      background-color: #f8d7da;
+    }
+    .input-box {
+      display: flex;
+      gap: 10px;
+      
+    }
+    .input-box input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      
+    }
+    .input-box button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      
+    }
+    
+    .input-box button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="chat-box" id="chatBox"></div>
+    <div class="input-box">
+      <input type="text" id="userInput" placeholder="اكتب سؤالك هنا...">
+      <button onclick="sendMessage()">إرسال</button>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById('chatBox');
+    const userInput = document.getElementById('userInput');
+
+    async function sendMessage() {
+      const message = userInput.value.trim();
+      if (message === '') return;
+
+      // عرض رسالة المستخدم
+      appendMessage(message, 'user');
+      userInput.value = '';
+
+      // إرسال السؤال إلى واجهة OpenAI API
+      appendMessage('جارٍ التفكير...', 'ai');
+
+      try {
+        const response = await fetch('https://api.openai.com/v1/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': ' 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'
+          },
+          body: JSON.stringify({
+            model: "text-davinci-003",
+            prompt: message,
+            max_tokens: 200,
+            temperature: 0.7,
+          })
+        });
+
+        const data = await response.json();
+        const aiMessage = data.choices[0].text.trim();
+
+        // عرض رد الذكاء الاصطناعي
+        appendMessage(aiMessage, 'ai');
+      } catch (error) {
+        appendMessage('حدث خطأ أثناء الاتصال بالخادم. حاول مرة أخرى.', 'ai');
+      }
+    }
+
+    function appendMessage(text, sender) {
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message', sender);
+      messageElement.textContent = text;
+      chatBox.appendChild(messageElement);
+      chatBox.scrollTop = chatBox.scrollHeight; // تمرير إلى الأسفل
+    }
+  
+  
+  
+  
+  
+  
+  
+```
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.Base64;
+
+public class ApiKeyEncryptor {
+    private static final String SECRET_KEY = "مفتاح_السر_الخاص_بك"; // استبدل بسرك الخاص
+    private static final String ALGORITHM = "AES";
+
+    public static String encryptApiKey(String apiKey) throws Exception {
+        Key key = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        byte[] encryptedBytes = cipher.doFinal(apiKey.getBytes());
+        return Base64.getEncoder().encodeToString(encryptedBytes);
+    }
+
+    public static String decryptApiKey(String encryptedApiKey) throws Exception {
+        Key key = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedApiKey));
+        return new String(decryptedBytes);
+    }
+}
+```
+
+كود مصادقة API
+```
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+public class ApiAuthenticator {
+    private static final String API_URL = "(link unavailable)";
+    private static final String ENCRYPTED_API_KEY = ApiKeyEncryptor.encryptApiKey("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"); // استبدل بسرك الخاص
+
+    public static String authenticate(String prompt) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("model", "text-davinci-003");
+        requestBody.put("prompt", prompt);
+        requestBody.put("max_tokens", "200");
+        requestBody.put("temperature", "0.7");
+
+        Request request = new Request.Builder()
+                .url(API_URL)
+                .post(okhttp3.FormBody.create(okhttp3.MediaType.get("application/json"), requestBody.toString()))
+                .header("Authorization", "Bearer " + ENCRYPTED_API_KEY)
+                .header("Content-Type", "application/json")
+                .build();
+
+        Response response = client.newCall(request).execute();
+        return response.body().string();
+    }
+}
+```
+
+
+```
+import java.io.IOException;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        String prompt = "سؤالك هنا";
+        String response = ApiAuthenticator.authenticate(prompt);
+        System.out.println(response);
+    }
+}
+```
+
+
+  </script>
+</body>
+</html>
